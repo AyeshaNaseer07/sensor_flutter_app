@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ui_design/App/modules/sensors/anti_theft/anti_theft_view.dart';
+import 'package:ui_design/App/modules/sensors/bluetooth_sensor/bluetooth_view.dart';
 import 'package:ui_design/App/modules/sensors/headphone/headphone_view.dart';
 import 'package:ui_design/App/modules/sensors/motion_sensor/motion_view.dart';
 import 'package:ui_design/App/modules/sensors/power_sensor/power_view.dart';
@@ -44,13 +45,13 @@ class SensorHubPage extends StatelessWidget {
             Colors.blue,
             WifiAlarmPage(),
           ),
-          // sensorCard(
-          //   context,
-          //   "Bluetooth",
-          //   Icons.bluetooth,
-          //   Colors.indigo,
-          //   const BluetoothSensorPage(),
-          // ),
+          sensorCard(
+            context,
+            "Bluetooth",
+            Icons.bluetooth,
+            Colors.indigo,
+            BluetoothAlarmPage(),
+          ),
           sensorCard(
             context,
             "Charging",

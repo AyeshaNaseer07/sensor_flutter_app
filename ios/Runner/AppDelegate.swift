@@ -13,12 +13,12 @@ import AVFoundation
     let wifiMonitor = NWPathMonitor()
     var wifiAlarmEnabled = false
 
-    // MARK: - Bluetooth
-    var bluetoothAlarmPlayer: AVAudioPlayer?
-    var bluetoothSilentPlayer: AVAudioPlayer?
-    var bluetoothAlarmEnabled = false
-    var centralManager: CBCentralManager?
-    var connectedPeripheralCount = 0
+// MARK: - Bluetooth
+var bluetoothAlarmPlayer: AVAudioPlayer?
+var bluetoothSilentPlayer: AVAudioPlayer?
+var bluetoothAlarmEnabled = false
+var centralManager: CBCentralManager?
+var connectedPeripheralCount = 0
 
     // MARK: - Charger
     var chargerAlarmPlayer: AVAudioPlayer?
@@ -34,6 +34,7 @@ import AVFoundation
     ) -> Bool {
 
         GeneratedPluginRegistrant.register(with: self)
+        
         let controller = window?.rootViewController as! FlutterViewController
 
         // Enable battery monitoring
@@ -150,17 +151,29 @@ import AVFoundation
     func startWifiSilentService() { startGlobalSilentAudio() }
     func stopWifiSilentService() { wifiSilentPlayer?.stop() }
 
-    // MARK: - Bluetooth
+// MARK: - Bluetooth
     func startBluetoothMonitoring() {
-        centralManager = CBCentralManager(delegate: self, queue: DispatchQueue.global())
+        centralManager = CBCentralManager(delegate: self, queue: DispatchQueue.global(qos: .background))
     }
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state != .poweredOn {
-            print("Bluetooth is not powered on")
-            return
+        switch central.state {
+        case .poweredOn:
+            central.scanForPeripherals(withServices: nil,
+                                       options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+            print("Bluetooth powered on, scanning started...")
+
+            // Track already connected peripherals
+            let connectedPeripherals = central.retrieveConnectedPeripherals(withServices: [])
+            for peripheral in connectedPeripherals {
+                print("Already connected: \(peripheral.name ?? "Unknown")")
+                if bluetoothAlarmEnabled { playBluetoothAlarm() }
+                central.connect(peripheral, options: nil)
+            }
+
+        default:
+            print("Bluetooth state changed: \(central.state.rawValue)")
         }
-        central.scanForPeripherals(withServices: nil, options: nil)
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -192,7 +205,7 @@ import AVFoundation
     func stopBluetoothAlarm() { bluetoothAlarmPlayer?.stop() }
     func startBluetoothSilentService() { startGlobalSilentAudio() }
     func stopBluetoothSilentService() { bluetoothSilentPlayer?.stop() }
-
+    
     // MARK: - Charger
     @objc func batteryStateChanged() {
         let state = UIDevice.current.batteryState

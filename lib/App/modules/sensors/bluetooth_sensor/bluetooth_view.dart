@@ -148,3 +148,64 @@
 //     );
 //   }
 // }
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+class BluetoothAlarmPage extends StatefulWidget {
+  const BluetoothAlarmPage({super.key});
+
+  @override
+  State<BluetoothAlarmPage> createState() => _BluetoothAlarmPageState();
+}
+
+class _BluetoothAlarmPageState extends State<BluetoothAlarmPage> {
+  static const platform = MethodChannel("bluetooth.alarm/channel");
+
+  bool isAlarmActive = false;
+
+  Future<void> activateAlarm() async {
+    try {
+      final result = await platform.invokeMethod("activateAlarm");
+      print(result);
+      setState(() => isAlarmActive = true);
+    } on PlatformException catch (e) {
+      print("Failed to activate alarm: ${e.message}");
+    }
+  }
+
+  Future<void> deactivateAlarm() async {
+    try {
+      final result = await platform.invokeMethod("deactivateAlarm");
+      print(result);
+      setState(() => isAlarmActive = false);
+    } on PlatformException catch (e) {
+      print("Failed to deactivate alarm: ${e.message}");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Bluetooth Alarm")),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Bluetooth Alarm is ${isAlarmActive ? "Active" : "Inactive"}",
+              style: const TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: isAlarmActive ? deactivateAlarm : activateAlarm,
+              child: Text(
+                isAlarmActive ? "Deactivate Alarm" : "Activate Alarm",
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
