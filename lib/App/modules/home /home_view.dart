@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ui_design/App/modules/sensors/anti_theft/anti_theft_view.dart';
 import 'package:ui_design/App/modules/sensors/bluetooth_sensor/bluetooth_view.dart';
+import 'package:ui_design/App/modules/sensors/clap_whistle_detect/clap_detect_view.dart';
 import 'package:ui_design/App/modules/sensors/headphone/headphone_view.dart';
 import 'package:ui_design/App/modules/sensors/motion_sensor/motion_view.dart';
 import 'package:ui_design/App/modules/sensors/power_sensor/power_view.dart';
@@ -40,31 +41,38 @@ class SensorHubPage extends StatelessWidget {
           ),
           sensorCard(
             context,
-            "Wi-Fi Sensor",
+            "Wi-Fi Status Change Detector",
             Icons.wifi,
             Colors.blue,
             WifiAlarmPage(),
           ),
           sensorCard(
             context,
-            "Bluetooth",
+            "Bluetooth Status Change Detector",
             Icons.bluetooth,
             Colors.indigo,
             BluetoothAlarmPage(),
           ),
           sensorCard(
             context,
-            "Charging",
+            "Charging Unplug Detector",
             Icons.battery_charging_full,
             Colors.green,
             const ChargerAlarmPage(),
           ),
           sensorCard(
             context,
-            "Headphones",
+            "Headphones Plug/Unplug Detector",
             Icons.headset,
             Colors.orange,
             const HeadphoneSensorPage(),
+          ),
+          sensorCard(
+            context,
+            "Clap and Whistle Detection",
+            Icons.surround_sound_outlined,
+            Colors.black,
+            const ClapDetectView(),
           ),
         ],
       ),

@@ -167,20 +167,20 @@ class _BluetoothAlarmPageState extends State<BluetoothAlarmPage> {
   Future<void> activateAlarm() async {
     try {
       final result = await platform.invokeMethod("activateAlarm");
-      print(result);
+      debugPrint(result);
       setState(() => isAlarmActive = true);
     } on PlatformException catch (e) {
-      print("Failed to activate alarm: ${e.message}");
+      debugPrint("Failed to activate alarm: ${e.message}");
     }
   }
 
   Future<void> deactivateAlarm() async {
     try {
       final result = await platform.invokeMethod("deactivateAlarm");
-      print(result);
+      debugPrint(result);
       setState(() => isAlarmActive = false);
     } on PlatformException catch (e) {
-      print("Failed to deactivate alarm: ${e.message}");
+      debugPrint("Failed to deactivate alarm: ${e.message}");
     }
   }
 

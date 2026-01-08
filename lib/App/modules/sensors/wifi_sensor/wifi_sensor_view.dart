@@ -30,7 +30,7 @@ class _WifiAlarmPageState extends State<WifiAlarmPage> {
         isAlarmPlaying = isArmed; // show alarm active when armed
       });
     } on PlatformException catch (e) {
-      print("Error calling native method: ${e.message}");
+      debugPrint("Error calling native method: ${e.message}");
     }
   }
 
