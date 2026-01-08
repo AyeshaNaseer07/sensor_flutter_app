@@ -15,6 +15,8 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - permission_handler_apple (9.3.0):
+    - Flutter
   - proximity_sensor (0.0.1):
     - Flutter
   - sensors_plus (0.0.1):
@@ -28,6 +30,7 @@ DEPENDENCIES:
   - flutter_blue_plus_darwin (from `.symlinks/plugins/flutter_blue_plus_darwin/darwin`)
   - headphones_detection (from `.symlinks/plugins/headphones_detection/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - proximity_sensor (from `.symlinks/plugins/proximity_sensor/ios`)
   - sensors_plus (from `.symlinks/plugins/sensors_plus/ios`)
 
@@ -46,6 +49,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/headphones_detection/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
   proximity_sensor:
     :path: ".symlinks/plugins/proximity_sensor/ios"
   sensors_plus:
@@ -59,9 +64,10 @@ SPEC CHECKSUMS:
   flutter_blue_plus_darwin: 20a08bfeaa0f7804d524858d3d8744bcc1b6dbc3
   headphones_detection: 1a8620aef7f254a0688054789551782fe6bdee0b
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   proximity_sensor: 2aef59f90cf0382935faf58ad0a79e1e860773bd
   sensors_plus: 6a11ed0c2e1d0bd0b20b4029d3bad27d96e0c65b
 
-PODFILE CHECKSUM: 1857a7cdb7dfafe45f2b0e9a9af44644190f7506
+PODFILE CHECKSUM: 96fc2c43418512d74ecaca4297ea7bd4d795005c
 
 COCOAPODS: 1.16.2
