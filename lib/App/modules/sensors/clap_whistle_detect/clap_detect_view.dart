@@ -191,14 +191,6 @@ class ClapDetectViewState extends State<ClapDetectView> {
                       ),
                       Text('👏 Clap detection: Sharp, loud sounds'),
                       Text('🎵 Whistle detection: Sustained tones (1-3kHz)'),
-                      Text(
-                        'Works in background and when screen is locked!',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
                     ],
                   ),
                 ),

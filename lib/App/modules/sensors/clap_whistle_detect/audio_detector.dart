@@ -41,9 +41,9 @@ class AudioDetector {
       if (status.isPermanentlyDenied) {
         await openAppSettings();
       }
-      debugPrint("Mic permission: $status"); // ab "granted" aayega
+      debugPrint("Mic permission: $status"); // now "granted" display
 
-      // 👇 DEBUG ke liye yahan paste karo
+      // for DEBUG paste here
       debugPrint("Mic permission: $status");
 
       return status.isGranted;
