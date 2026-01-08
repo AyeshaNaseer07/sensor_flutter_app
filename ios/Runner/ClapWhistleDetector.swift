@@ -179,17 +179,22 @@ class AudioDetectorService {
     }
     
     // MARK: - Audio Processing
-    private func processAudioBuffer(_ buffer: AVAudioPCMBuffer) {
-        guard let channelData = buffer.floatChannelData else { return }
-        
-        let frameLength = Int(buffer.frameLength)
-        let samples = Array(UnsafeBufferPointer(start: channelData[0], count: frameLength))
-        let maxAmplitude = samples.map { abs($0) }.max() ?? 0.0
-        
-        detectClap(amplitude: maxAmplitude)
-        detectWhistle(samples: samples, amplitude: maxAmplitude)
-    }
+   private func processAudioBuffer(_ buffer: AVAudioPCMBuffer) {
+    guard let channelData = buffer.floatChannelData else { return }
     
+    let frameLength = Int(buffer.frameLength)
+    let samples = Array(UnsafeBufferPointer(start: channelData[0], count: frameLength))
+    let maxAmplitude = samples.map { abs($0) }.max() ?? 0.0
+
+    // 1️⃣ Detect whistle first
+    let whistleDetected = detectWhistle(samples: samples, amplitude: maxAmplitude)
+
+    // 2️⃣ Detect clap only if no whistle detected in this frame
+    if !whistleDetected {
+        detectClap(amplitude: maxAmplitude)
+    }
+}
+
     // MARK: - Clap Detection
     private func detectClap(amplitude: Float) {
         let adjustedThreshold = baseClapThreshold * Float(1.0 - 0.5 * sensitivity)
@@ -208,35 +213,39 @@ class AudioDetectorService {
     }
     
     // MARK: - Whistle Detection
-    private func detectWhistle(samples: [Float], amplitude: Float) {
-        let adjustedAmplitude = baseWhistleAmplitude * Float(1.0 - 0.5 * sensitivity)
-        
-        if amplitude < adjustedAmplitude {
-            consecutiveWhistleCount = 0
-            return
-        }
-        
-        let dominantFreq = findDominantFrequency(samples: samples)
-        
-        if dominantFreq >= whistleFreqMin && dominantFreq <= whistleFreqMax {
-            consecutiveWhistleCount += 1
-            if consecutiveWhistleCount >= 3 {
-                let now = Date()
-                if let lastWhistle = lastWhistleTime, now.timeIntervalSince(lastWhistle) < 1.0 { return }
-                lastWhistleTime = now
-                consecutiveWhistleCount = 0
-                
-                print("🎵 WHISTLE DETECTED! Frequency: \(dominantFreq) Hz")
-                
-                DispatchQueue.main.async { [weak self] in
-                    self?.methodChannel.invokeMethod("onWhistleDetected", arguments: nil)
-                }
-            }
-        } else {
-            consecutiveWhistleCount = 0
-        }
+    @discardableResult
+private func detectWhistle(samples: [Float], amplitude: Float) -> Bool {
+    let adjustedAmplitude = baseWhistleAmplitude * Float(1.0 - 0.7 * sensitivity)
+    
+    if amplitude < adjustedAmplitude {
+        consecutiveWhistleCount = 0
+        return false
     }
     
+    let dominantFreq = findDominantFrequency(samples: samples)
+    
+    if dominantFreq >= whistleFreqMin && dominantFreq <= whistleFreqMax {
+        consecutiveWhistleCount += 1
+        if consecutiveWhistleCount >= 1 {
+            let now = Date()
+            if let lastWhistle = lastWhistleTime, now.timeIntervalSince(lastWhistle) < 1.0 { return false }
+            lastWhistleTime = now
+            consecutiveWhistleCount = 0
+            
+            print("🎵 WHISTLE DETECTED! Frequency: \(dominantFreq) Hz")
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.methodChannel.invokeMethod("onWhistleDetected", arguments: nil)
+            }
+            
+            return true
+        }
+    } else {
+        consecutiveWhistleCount = 0
+    }
+    return false
+}
+
     // MARK: - Frequency Detection
     private func findDominantFrequency(samples: [Float]) -> Float {
         guard samples.count > 1 else { return 0 }
