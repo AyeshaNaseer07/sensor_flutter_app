@@ -114,7 +114,7 @@ class ClapDetectViewState extends State<ClapDetectView> {
 
               if (!_isAlarmRinging) ...[
                 ElevatedButton(
-                  onPressed: _toggleListening, // ✔ correct function
+                  onPressed: _toggleListening,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 50,
